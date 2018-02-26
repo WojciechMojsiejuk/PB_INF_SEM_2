@@ -8,121 +8,84 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#define STACK_SIZE 5
 struct STACK
 {
     int number;
     struct STACK *next;
 };
-STACK* InitStack()
+void InitStack()
 {
-    STACK* newstack  = new STACK;
-    newstack->next=NULL;
-    return newstack;
+    
+    return;
 }
-bool IsEmpty(STACK* Bottom)
+bool IsEmpty(STACK* Top)
 {
-    //Condition checks whether stack was not initialized or was initialized but did not receive any value - by default it gets 0
-    if(Bottom==NULL or (Bottom->next==NULL and Bottom->number==0))
+    if(Top==NULL)
         return true;
     return false;
 }
-bool IsFull(STACK* Bottom)
+bool IsFull(STACK* Top)
 {
-    int counter=0;
-    while(Bottom->next!=NULL)
-    {
-        Bottom=Bottom->next;
-        counter++;
-        if(counter>=STACK_SIZE)
-        {
-            return true;
-        }
-    }
+    //Stack by default won't be full (while using list structure), unless its size would be limited by defined value.
     return false;
+}
+STACK* PushStack(STACK* Top, int value)
+{
+    STACK * new_Top = new STACK;
+    new_Top->number=value;
+    new_Top->next=Top;
+    return new_Top;
+}
+void PopStack(STACK** Top)
+{
+    if(IsEmpty(*Top)==0)
+    {
+        STACK *temp = (*Top)->next;
+        delete (*Top);
+        (*Top) = temp;
+    }
+    else
+    {
+        fprintf(stderr, "Cannot delete element, no more elements\n");
+    }
 }
 void DestroyStack(STACK** StackToDelete)
 {
-    STACK *pom;
     while(*StackToDelete!=NULL)
     {
-        pom=*StackToDelete;
-        *StackToDelete=(*StackToDelete)->next;
-        delete pom;
+        PopStack(StackToDelete);
     }
 }
-STACK* PushStack(STACK* Bottom, int value)
+void TopStack(STACK* Top)
 {
-    int counter=0;
-    while(Bottom->next!=NULL)
-    {
-        Bottom=Bottom->next;
-        counter++;
-        if(counter>=STACK_SIZE)
-        {
-            fprintf(stderr, "Stack size limit. Cannot add another value.\n");
-            return NULL;
-        }
-    }
-    Bottom->next=new STACK;
-    Bottom=Bottom->next;
-    Bottom->number=value;
-    Bottom->next=NULL;
-    return Bottom;
-}
-int PopStack(STACK* Bottom)
-{
-    int pom;
-    STACK *temp;
-    if(IsEmpty(Bottom)==1)
-    {
-        fprintf(stderr, "Stack is empty, cannot pop object\n");
-        return -1;
-    }
-    while(Bottom->next->next!=NULL)
-    {
-        Bottom=Bottom->next;
-    }
-    pom = Bottom->next->number;
-    temp = Bottom->next;
-    delete temp;
-    Bottom->next= NULL;
-    return pom;
-}
-void TopStack(STACK* Bottom)
-{
-    while(Bottom->next!=NULL)
-    {
-        Bottom=Bottom->next;
-    }
-    std::cout<<Bottom->number<<"\n";
+    std::cout<<Top->number<<"\n";
 }
 int main(int argc, const char * argv[]) {
-    STACK* init = InitStack();
-    std::cout<<"Czy stack jest pusty? "<<IsEmpty(init)<<"\n";
-    int i,j;
+    STACK* top = NULL;
+    int i;
     srand(time(NULL));
     int limit = std::rand()%10;
     int value;
     for(i=0;i<limit;i++)
     {
         value= std::rand()%20;
-        if(PushStack(init, value)==NULL)
-        {
-            break;
-        }
+        top = PushStack(top, value);
         std::cout<<i<<": "<<value<<"\n";
     }
-    std::cout<<"Czy stack jest pusty? "<<IsEmpty(init)<<"\n";
-    std::cout<<"Czy stack jest pełny? "<<IsFull(init)<<"\n";
-    std::cout<<"\nTop element: ";
-    TopStack(init);
+    std::cout<<"Czy stack jest pusty? "<<IsEmpty(top)<<"\n";
+    std::cout<<"Czy stack jest pełny? "<<IsFull(top)<<"\n";
+
     std::cout<<"\nWartosci stosu zdejmowane z gory: \n";
     
-    for(j=0;j<i;j++)
+    for(i=0;i<limit;i++)
     {
-        std::cout<<PopStack(init)<<"\n";
+        if(IsEmpty(top)==0)
+        {
+            TopStack(top);
+        }
+        PopStack(&top);
+        
     }
-    DestroyStack(&init);
+    DestroyStack(&top);
     return 0;
 }
