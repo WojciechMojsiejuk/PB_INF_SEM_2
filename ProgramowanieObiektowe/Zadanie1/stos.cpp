@@ -1,5 +1,6 @@
+//  Copyright © 2018 Paweł Bąk.
+//
 #include <iostream>
-#include <string>
 #include <ctime>
 
 struct stos
