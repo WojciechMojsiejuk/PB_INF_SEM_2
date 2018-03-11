@@ -10,7 +10,7 @@ class Filtr
         StreamWriter Wyjscie;
         String Nazwa;
         String[] Slowa;
-        Int32 Wiek, i;
+        int i;
         float Skut, Max = 0.0F;
         Console.WriteLine("Podaj nazwe pliku:");
         Nazwa = Console.ReadLine();
