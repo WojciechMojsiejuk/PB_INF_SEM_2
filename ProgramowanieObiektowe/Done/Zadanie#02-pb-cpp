@@ -1,0 +1,63 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int main()
+{
+	ifstream plik;
+	ofstream wyjscie;
+	string Nazwa, Imie, Nazwisko;
+	int Wiek, i;
+	float Skut, Max = 0.0;
+	cout << "Podaj nazwe pliku:" << endl;
+	cin >> Nazwa;
+	plik.open(Nazwa + ".txt");
+	if (!plik.is_open())
+	{
+		cout << "Blad otwarcia";
+		cin.ignore();
+		cin.get();
+		return 1;
+	}
+	while (!plik.eof())
+	{
+		plik >> Imie;
+		plik >> Nazwisko;
+		plik >> Wiek;
+		plik >> Skut;
+		if (Skut > Max)
+			Max = Skut;
+	}
+	plik.seekg(ios_base::beg);
+	wyjscie.open(Nazwa + ".max.txt");
+	if (!wyjscie.is_open())
+	{
+		cout << "Blad zapisu";
+		cin.ignore();
+		cin.get();
+		return 1;
+	}
+	while (!plik.eof())
+	{
+		plik >> Imie;
+		plik >> Nazwisko;
+		plik >> Wiek;
+		plik >> Skut;
+		if (Imie.length() > 3 && Nazwisko.substr(Nazwisko.length() - 3, 3) == "ski" && Skut == Max)
+		{
+			wyjscie << Imie[0];
+			for (i = 0; i < Imie.length() - 4; i++)
+				wyjscie << '*';
+			wyjscie << Imie.substr(Imie.length() - 3, 3) << ' ';
+			wyjscie << Nazwisko[0];
+			for (i = 0; i < Nazwisko.length() - 4; i++)
+				wyjscie << '*';
+			wyjscie << Nazwisko.substr(Nazwisko.length() - 3, 3) << ' ';
+			wyjscie << Wiek << endl;
+		}
+	}
+	wyjscie.close();
+	plik.close();
+	return 0;
+}
