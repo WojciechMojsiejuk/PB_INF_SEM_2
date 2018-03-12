@@ -1,0 +1,49 @@
+using System;
+using System.Globalization;
+using System.IO;
+
+class Filtr
+{
+    static void Main()
+    {
+        StreamReader Plik;
+        StreamWriter Wyjscie;
+        String Nazwa;
+        String[] Slowa;
+        int i;
+        float Skut, Max = 0.0F;
+        Console.WriteLine("Podaj nazwe pliku:");
+        Nazwa = Console.ReadLine();
+        Plik = new StreamReader(Nazwa + ".txt");
+        while (!Plik.EndOfStream)
+        {
+            Slowa = Plik.ReadLine().Split(' ');
+            Skut = float.Parse(Slowa[3], CultureInfo.InvariantCulture);
+            if (Skut >= Max)
+                Max = Skut;
+        }
+        Plik.Close();
+        Plik = new StreamReader(Nazwa + ".txt");
+        Wyjscie = new StreamWriter(Nazwa + ".max.txt");
+        while (!Plik.EndOfStream)
+        {
+            Slowa = Plik.ReadLine().Split(' ');
+            Skut = float.Parse(Slowa[3], CultureInfo.InvariantCulture);
+            if(Slowa[0].Length > 3 && Slowa[1].EndsWith("ski", StringComparison.Ordinal) && Skut == Max)
+            {
+                Wyjscie.Write(Slowa[0][0]);
+                for (i = 0; i < Slowa[0].Length - 4; i++)
+                    Wyjscie.Write('*');
+                Wyjscie.Write(Slowa[0].Substring(Slowa[0].Length - 3) + ' ');
+                Wyjscie.Write(Slowa[1][0]);
+                for (i = 0; i < Slowa[1].Length - 4; i++)
+                    Wyjscie.Write('*');
+                Wyjscie.Write(Slowa[1].Substring(Slowa[1].Length - 3) + ' ');
+                Wyjscie.Write(Slowa[2] + ' ');
+                Wyjscie.WriteLine(Skut);
+            }
+        }
+        Plik.Close();
+        Wyjscie.Close();
+    }
+}
