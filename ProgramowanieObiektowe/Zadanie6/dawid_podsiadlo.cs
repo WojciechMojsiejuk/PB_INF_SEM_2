@@ -13,7 +13,15 @@ namespace ProgramowanieObiektowe6
             Console.WriteLine(l1.ToString());
             Console.WriteLine(l2.ToString());
             Punkt p3 = new Punkt(4, 3);
-
+            Punkt p4 = new Punkt();
+            Obraz obraz1 = new Obraz();
+            obraz1.dodajTrojkat(p1, p2, p3);
+            p4.przesun(7, 8);
+            obraz1.dodajTrojkat(p2, p3, p4);
+            obraz1.dodajKwadrat(p1, p2, p3, p4);
+            p3.przesun(-1, -4);
+            obraz1.dodajKwadrat(p3, p1, p4,p2);
+            Console.WriteLine(obraz1.ToString());
 
         }
     }
@@ -99,7 +107,7 @@ namespace ProgramowanieObiektowe6
         }
         public String ToString()
         {
-            return "\nLinia 1: "+linia1.ToString()+"\nLinia2: "+linia2.ToString()+"\nLinia3: "+linia3.ToString();
+            return "\nLinia 1: "+linia1.ToString()+"\nLinia2: "+linia2.ToString()+"\nLinia3: "+linia3.ToString()+"\n";
         }
     }
     public class Kwadrat
@@ -124,13 +132,18 @@ namespace ProgramowanieObiektowe6
         }
         public String ToString()
         {
-            return "\nLinia1: "+linia1.ToString()+"\nLinia2: " + linia2.ToString() +"\nLinia3: " + linia3.ToString()+ "\nLinia4: " + linia4.ToString();
+            return "\nLinia1: "+linia1.ToString()+"\nLinia2: " + linia2.ToString() +"\nLinia3: " + linia3.ToString()+ "\nLinia4: " + linia4.ToString()+"\n";
         }
     }
     public class Obraz
     {
         List<Trojkat> lista_trojkatow;
         List<Kwadrat> lista_czworokatow;
+        public Obraz()
+        {
+            lista_trojkatow = new List<Trojkat>();
+            lista_czworokatow = new List<Kwadrat>();
+        }
         public void dodajTrojkat(Punkt p1, Punkt p2, Punkt p3)
         {
             lista_trojkatow.Add(new Trojkat(p1, p2, p3));
@@ -138,6 +151,23 @@ namespace ProgramowanieObiektowe6
         public void dodajKwadrat(Punkt p1, Punkt p2, Punkt p3, Punkt p4)
         {
             lista_czworokatow.Add(new Kwadrat(p1, p2, p3, p4));
+        }
+        public String ToString()
+        {
+            string tekst1="\nLista trojkatow:\n", tekst2="\nLista kwadratow:\n";
+            int j = 0;
+            foreach(Trojkat i in lista_trojkatow)
+            {
+                j++;
+                tekst1 += "\nTrojkat nr. "+j+":\n"+i.ToString();
+            }
+            j = 0;
+            foreach (Kwadrat i in lista_czworokatow)
+            {
+                j++;
+                tekst2 += "\nKwadrat nr. " + j + ":\n" +i.ToString();
+            }
+            return string.Concat(tekst1,tekst2);                            
         }
     }
 }
