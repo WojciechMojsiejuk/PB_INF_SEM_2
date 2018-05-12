@@ -125,7 +125,8 @@ namespace ProgramowanieObiektowe8
                     }
                 }
             }
-            System.Console.WriteLine("Laczne srodki niewaznych osob= " + suma);
+			System.Console.WriteLine("Laczne srodki niewaznych osob= " + suma);
+			System.Console.WriteLine(bank.ZwrocSumeSrodkow(new Osoba("Karol", "Wojtyla", "2137")));
         }
     }
 
@@ -144,6 +145,22 @@ namespace ProgramowanieObiektowe8
         {
             return lista_klientow;
         }
+        public double ZwrocSumeSrodkow(Klient szukany_klient)
+		{
+			if (szukany_klient is Osoba || szukany_klient is WaznaOsoba)
+			{
+				foreach (Klient klient in lista_klientow)
+				{
+					if (klient is Osoba || klient is WaznaOsoba)
+					{
+						Osoba potencjalnyklient = klient as Osoba;
+						if (potencjalnyklient.Equals(szukany_klient))
+							return potencjalnyklient.lista_kont[0].SALDO;
+					}
+				}
+			}
+			return -1;
+		}
     }
     abstract class Klient
     {
@@ -156,11 +173,12 @@ namespace ProgramowanieObiektowe8
         {
             lista_kont.Add(konto);
         }
-        public List<Konto> GetKonta()
-        {
-            return lista_kont;
-        }
-    }
+		public List<Konto> GetKonta()
+		{
+			return lista_kont;
+		}
+
+	}
     class Konto
     {
         private string nr;
@@ -217,7 +235,12 @@ namespace ProgramowanieObiektowe8
         }
         protected string KRS;
         protected string nazwa;
-    }
+		public bool Equals(Firma firma)
+		{
+			if(firma.KRS==this.KRS&&firma.nazwa==this.nazwa){return true;}
+			return false;
+		}
+	}
     class DuzaFirma:Firma
     {
         public DuzaFirma():base()
@@ -244,7 +267,12 @@ namespace ProgramowanieObiektowe8
             nazwisko = _nazwisko;
             PESEL = _PESEL;
         }
-    }
+		public bool  Equals(Osoba osoba)
+		{
+			if (osoba.imie == this.imie && osoba.nazwisko == this.nazwisko && osoba.PESEL == this.PESEL) { return true; }
+			return false;
+		}
+	}
     class WaznaOsoba : Osoba
     {
         public WaznaOsoba() : base()
