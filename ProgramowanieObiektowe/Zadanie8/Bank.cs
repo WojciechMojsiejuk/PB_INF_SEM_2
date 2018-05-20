@@ -44,7 +44,7 @@ namespace ProgramowanieObiektowe8
             Konto konto9 = new Konto("9");
             konto9.SALDO = 30000;
             wazna1.DodajKonto(konto9);
-            WaznaOsoba wazna2 = new WaznaOsoba("Karol", "Wojtyla", "2137");
+            WaznaOsoba wazna2 = new WaznaOsoba("Karol", "Wojtyla", "2000");
             Konto konto10 = new Konto("10");
             konto10.SALDO = 0;
             konto10.Wplac(-10);
@@ -126,7 +126,7 @@ namespace ProgramowanieObiektowe8
                 }
             }
 			System.Console.WriteLine("Laczne srodki niewaznych osob= " + suma);
-			System.Console.WriteLine(bank.ZwrocSumeSrodkow(new Osoba("Karol", "Wojtyla", "2137")));
+			System.Console.WriteLine(bank.ZwrocSumeSrodkow(new Osoba("Karol", "Wojtyla", "2000")));
         }
     }
 
@@ -149,15 +149,16 @@ namespace ProgramowanieObiektowe8
 		{
 			if (szukany_klient is Osoba || szukany_klient is WaznaOsoba)
 			{
-				foreach (Klient klient in lista_klientow)
+				return lista_klientow[lista_klientow.IndexOf(szukany_klient)].SaldoWszystkichKont();
+				/*foreach (Klient klient in lista_klientow)
 				{
 					if (klient is Osoba || klient is WaznaOsoba)
 					{
-						Osoba potencjalnyklient = klient as Osoba;
+						Osoba potencjalnyklient = (Osoba)klient;
 						if (potencjalnyklient.Equals(szukany_klient))
-							return potencjalnyklient.lista_kont[0].SALDO;
+							return potencjalnyklient.SaldoWszystkichKont();
 					}
-				}
+				}*/
 			}
 			return -1;
 		}
@@ -176,6 +177,15 @@ namespace ProgramowanieObiektowe8
 		public List<Konto> GetKonta()
 		{
 			return lista_kont;
+		}
+        public double SaldoWszystkichKont()
+		{
+			double saldo = 0;
+			foreach(Konto konto in lista_kont)
+			{
+				saldo += konto.SALDO;
+			}
+			return saldo;
 		}
 
 	}
@@ -267,11 +277,15 @@ namespace ProgramowanieObiektowe8
             nazwisko = _nazwisko;
             PESEL = _PESEL;
         }
-		public bool  Equals(Osoba osoba)
+		public override bool  Equals(Object osoba)
 		{
-			if (osoba.imie == this.imie && osoba.nazwisko == this.nazwisko && osoba.PESEL == this.PESEL) { return true; }
+			if (osoba == null || this.GetType()!=osoba.GetType()) //Problem z GetType()!
+				return false;
+			Osoba o = osoba as Osoba;
+			if (o.imie == this.imie && o.nazwisko == this.nazwisko && o.PESEL == this.PESEL) { return true; }
 			return false;
 		}
+
 	}
     class WaznaOsoba : Osoba
     {
@@ -280,6 +294,14 @@ namespace ProgramowanieObiektowe8
         }
         public WaznaOsoba(string _imie, string _nazwisko, string _PESEL) : base(_imie, _nazwisko, _PESEL)
         {
+        }
+		public override bool Equals(Object osoba)
+        {
+            if (osoba == null || this.GetType() != osoba.GetType()) //Problem z GetType()!
+                return false;
+            WaznaOsoba o = osoba as WaznaOsoba;
+            if (o.imie == this.imie && o.nazwisko == this.nazwisko && o.PESEL == this.PESEL) { return true; }
+            return false;
         }
     }
 }
